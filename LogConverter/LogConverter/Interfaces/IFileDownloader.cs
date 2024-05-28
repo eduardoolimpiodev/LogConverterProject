@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace LogConverter.Interfaces
 {
-    internal class IFileDownloader
+    public interface IFileDownloader
     {
+        Task<string> DownloadFileAsync(string url);
     }
 }
