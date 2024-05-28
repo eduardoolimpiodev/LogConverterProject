@@ -29,69 +29,28 @@ Microsoft.Extensions.DependencyInjection
 Microsoft.Extensions.Hosting
 Microsoft.Extensions.Http
 
-Estrutura do Projeto
-Copiar código
-LogConverterProject
-│
-├── LogConverter.sln
-│
-├── LogConverter
-│   ├── LogConverter.csproj
-│   ├── Interfaces
-│   │   ├── IFileDownloader.cs
-│   │   ├── ILogFormatter.cs
-│   │   ├── ILogParser.cs
-│   │
-│   ├── Models
-│   │   └── LogEntry.cs
-│   │
-│   ├── Services
-│   │   ├── FileDownloader.cs
-│   │   ├── LogFormatterService.cs
-│   │   └── LogParserService.cs
-│   │
-│   ├── Program.cs
-│
-├── LogConverter.Tests
-│   ├── LogConverter.Tests.csproj
-│   ├── FileDownloaderTests.cs
-│   ├── LogFormatterServiceTests.cs
-│   ├── LogParserServiceTests.cs
-│   └── AdditionalLogTests.cs
-
 Instalação
 Clone o repositório:
 
-sh
-Copiar código
+
 git clone https://github.com/your-username/LogConverter.git
 Navegue até o diretório do projeto:
 
-sh
-Copiar código
 cd LogConverterProject
 Restaure as dependências:
 
-sh
-Copiar código
 dotnet restore
 Uso
 Para executar a aplicação de conversão de logs, utilize o seguinte comando:
 
-sh
-Copiar código
 dotnet run --project LogConverter/LogConverter.csproj
 A aplicação irá baixar um arquivo de log de uma URL especificada, converter o log para o formato "Agora" e salvar o resultado em um caminho especificado.
 
 Exemplo de uso:
-sh
-Copiar código
 dotnet run --project LogConverter/LogConverter.csproj "https://s3.amazonaws.com/uux-itaas-static/minha-cdn-logs/input-01.txt" "C:\testeTTTN\outputTest.txt"
 Testes
 Para executar os testes unitários, utilize o seguinte comando:
 
-sh
-Copiar código
 dotnet test
 Os testes irão verificar a funcionalidade dos componentes principais da aplicação, incluindo o downloader de arquivos, o parser de logs e o formatter de logs.
 
