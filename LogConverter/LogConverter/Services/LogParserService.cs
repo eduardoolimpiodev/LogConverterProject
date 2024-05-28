@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using LogConverter.Interfaces;
-using LogConverter.Models;
+using System.Globalization;
 
 namespace LogConverter.Services
 {
@@ -10,18 +9,21 @@ namespace LogConverter.Services
         public IEnumerable<LogEntry> ParseLogs(string content)
         {
             var lines = content.Split('\n');
-            foreach (var line in lines.Where(line => !string.IsNullOrEmpty(line)))
+            foreach (var line in lines)
             {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
                 var parts = line.Split('|');
-                yield return new LogEntry
+                var logEntry = new LogEntry
                 {
-                    Size = int.Parse(parts[0]),
-                    StatusCode = int.Parse(parts[1]),
+                    Size = int.Parse(parts[0], CultureInfo.InvariantCulture),
+                    StatusCode = int.Parse(parts[1], CultureInfo.InvariantCulture),
                     CacheStatus = parts[2],
                     HttpMethod = parts[3].Split(' ')[0].Trim('"'),
                     UriPath = parts[3].Split(' ')[1],
-                    ResponseTime = double.Parse(parts[4])
+                    ResponseTime = double.Parse(parts[4], CultureInfo.InvariantCulture)
                 };
+                yield return logEntry;
             }
         }
     }

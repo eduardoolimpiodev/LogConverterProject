@@ -1,43 +1,24 @@
-﻿using LogConverter.Interfaces;
-using LogConverter.Services;
-using Moq;
-using Moq.Protected;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
-using Xunit;
+using LogConverter.Interfaces;
 
-namespace LogConverter.Tests
+namespace LogConverter.Services
 {
-    public class FileDownloaderTests
+    public class FileDownloader : IFileDownloader
     {
-        [Fact]
-        public async Task DownloadFileAsync_ValidUrl_ReturnsContent()
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public FileDownloader(IHttpClientFactory httpClientFactory)
         {
-            var mockHttpClientFactory = new Mock<IHttpClientFactory>();
-            var handlerMock = new Mock<HttpMessageHandler>();
-            handlerMock
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("File content")
-                });
+            _httpClientFactory = httpClientFactory;
+        }
 
-            var httpClient = new HttpClient(handlerMock.Object);
-            mockHttpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-
-            var downloader = new FileDownloader(mockHttpClientFactory.Object);
-
-            var content = await downloader.DownloadFileAsync("http://example.com");
-
-            Assert.Equal("File content", content);
+        public async Task<string> DownloadFileAsync(string url)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }

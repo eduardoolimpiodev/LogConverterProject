@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LogConverter.Interfaces;
-using LogConverter.Models;
+
 
 namespace LogConverter.Services
 {
@@ -10,14 +10,18 @@ namespace LogConverter.Services
     {
         public string FormatLogs(IEnumerable<LogEntry> entries)
         {
-            var header = $"#Version: 1.0\n#Date: {DateTime.Now:dd/MM/yyyy HH:mm:ss}\n#Fields: provider http-method status-code uri-path time-taken response-size cache-status\n";
-            var logs = entries.Select(e =>
-            {
-                string cacheStatus = e.CacheStatus == "INVALIDATE" ? "REFRESH_HIT" : e.CacheStatus;
-                return $"\"MINHA CDN\" {e.HttpMethod} {e.StatusCode} {e.UriPath} {Math.Truncate(e.ResponseTime)} {e.Size} {cacheStatus}";
-            });
+            var header = "#Version: 1.0\n#Date: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "\n#Fields: provider http-method status-code uri-path time-taken response-size cache-status\n";
+            var formattedEntries = entries.Select(e => $"\"MINHA CDN\" {e.HttpMethod} {e.StatusCode} {e.UriPath} {Math.Round(e.ResponseTime)} {e.Size} {ConvertCacheStatus(e.CacheStatus)}");
+            return header + string.Join("\n", formattedEntries);
+        }
 
-            return header + string.Join("\n", logs);
+        private string ConvertCacheStatus(string status)
+        {
+            return status switch
+            {
+                "INVALIDATE" => "REFRESH_HIT",
+                _ => status
+            };
         }
     }
 }

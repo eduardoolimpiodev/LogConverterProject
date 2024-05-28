@@ -30,20 +30,31 @@ namespace LogConverter
             var parser = services.GetRequiredService<ILogParser>();
             var formatter = services.GetRequiredService<ILogFormatter>();
 
-            string url = "https://s3.amazonaws.com/uux-itaas-static/minha-cdn-logs/input-01.txt";
-            string outputPath = @"C:\testeTTTN\outputTest.txt";
+            var logUrls = new[]
+            {
+                "https://s3.amazonaws.com/uux-itaas-static/minha-cdn-logs/input-01.txt",
+                "https://domaniinteriores.com/log1.txt",
+                "https://domaniinteriores.com/log2.txt",
+                "https://domaniinteriores.com/log3.txt"
+            };
 
-            try
+            for (int i = 0; i < logUrls.Length; i++)
             {
-                var logContent = await downloader.DownloadFileAsync(url);
-                var logEntries = parser.ParseLogs(logContent);
-                var formattedContent = formatter.FormatLogs(logEntries);
-                File.WriteAllText(outputPath, formattedContent);
-                Console.WriteLine("Log file downloaded and processed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+                string url = logUrls[i];
+                string outputPath = $@"C:\testeTTTN\outputTest{i + 1}.txt";
+
+                try
+                {
+                    var logContent = await downloader.DownloadFileAsync(url);
+                    var logEntries = parser.ParseLogs(logContent);
+                    var formattedContent = formatter.FormatLogs(logEntries);
+                    File.WriteAllText(outputPath, formattedContent);
+                    Console.WriteLine($"\nLog file from {url} downloaded and processed successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing log from {url}: {ex.Message}");
+                }
             }
         }
     }

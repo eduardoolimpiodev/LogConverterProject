@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using LogConverter.Models;
 using LogConverter.Services;
 using Xunit;
 
