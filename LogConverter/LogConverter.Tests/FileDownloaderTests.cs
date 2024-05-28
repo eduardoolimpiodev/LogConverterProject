@@ -1,8 +1,10 @@
 ﻿using LogConverter.Interfaces;
 using LogConverter.Services;
 using Moq;
+using Moq.Protected;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,11 +15,15 @@ namespace LogConverter.Tests
         [Fact]
         public async Task DownloadFileAsync_ValidUrl_ReturnsContent()
         {
-            // Arrange
             var mockHttpClientFactory = new Mock<IHttpClientFactory>();
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock
-                .Setup(handler => handler.SendAsync(It.IsAny<HttpRequestMessage>(), It.IsAny<CancellationToken>()))
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.OK,
@@ -29,10 +35,8 @@ namespace LogConverter.Tests
 
             var downloader = new FileDownloader(mockHttpClientFactory.Object);
 
-            // Act
-            var content = await downloader.DownloadFileAsync("http://valid.url");
+            var content = await downloader.DownloadFileAsync("http://example.com");
 
-            // Assert
             Assert.Equal("File content", content);
         }
     }

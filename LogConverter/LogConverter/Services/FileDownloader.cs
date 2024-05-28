@@ -1,6 +1,7 @@
-﻿using LogConverter.Interfaces;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using LogConverter.Interfaces;
 
 namespace LogConverter.Services
 {

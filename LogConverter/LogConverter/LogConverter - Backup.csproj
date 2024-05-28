@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>LogConverter</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+		<PackageReference Include="Moq" Version="4.18.2" />
+		<PackageReference Include="xunit" Version="2.4.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="Interfaces\IFileDownloader.cs" />
+		<Compile Include="Interfaces\ILogFormatter.cs" />
+		<Compile Include="Interfaces\ILogParser.cs" />
+		<Compile Include="Models\LogEntry.cs" />
+		<Compile Include="Services\FileDownloader.cs" />
+		<Compile Include="Services\LogFormatterService.cs" />
+		<Compile Include="Services\LogParserService.cs" />
+		<Compile Include="Program.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="Tests\FileDownloaderTests.cs" />
+		<Compile Include="Tests\LogFormatterServiceTests.cs" />
+		<Compile Include="Tests\LogParserServiceTests.cs" />
+	</ItemGroup>
+
+</Project>
